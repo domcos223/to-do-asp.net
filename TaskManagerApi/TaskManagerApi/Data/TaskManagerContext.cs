@@ -9,15 +9,13 @@ namespace TaskManagerApi.Data
         public TaskManagerContext(DbContextOptions<TaskManagerContext> options) : base(options)
         {
         }
-
         public DbSet<Column> Columns { get; set; }
         public DbSet<Todo> Todos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Todo>().ToTable("Task");
+            modelBuilder.Entity<Todo>().ToTable("Todo");
             modelBuilder.Entity<Column>().ToTable("Column");
         }
-
     }
 }
