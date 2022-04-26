@@ -12,7 +12,7 @@ using TaskManagerApi.Data;
 namespace TaskManagerApi.Migrations
 {
     [DbContext(typeof(TaskManagerContext))]
-    [Migration("20220426115910_InitialCreate")]
+    [Migration("20220426205748_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,24 +26,24 @@ namespace TaskManagerApi.Migrations
 
             modelBuilder.Entity("TaskManagerApi.Models.Column", b =>
                 {
-                    b.Property<int>("ColumnId")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ColumnId");
+                    b.HasKey("Id");
 
                     b.ToTable("Column", (string)null);
                 });
 
             modelBuilder.Entity("TaskManagerApi.Models.Todo", b =>
                 {
-                    b.Property<int>("TodoId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TodoId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("ColumnId")
                         .HasColumnType("int");
@@ -54,10 +54,13 @@ namespace TaskManagerApi.Migrations
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("TodoId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ColumnId");
 
@@ -66,11 +69,13 @@ namespace TaskManagerApi.Migrations
 
             modelBuilder.Entity("TaskManagerApi.Models.Todo", b =>
                 {
-                    b.HasOne("TaskManagerApi.Models.Column", null)
+                    b.HasOne("TaskManagerApi.Models.Column", "Column")
                         .WithMany("Todos")
                         .HasForeignKey("ColumnId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Column");
                 });
 
             modelBuilder.Entity("TaskManagerApi.Models.Column", b =>

@@ -14,10 +14,10 @@ namespace TaskManagerApi.Data
 
             var columns = new Column[]
             {
-                new Column{ColumnId=1,Title="TODO"},
-                new Column{ColumnId=2,Title="In progress"},
-                new Column{ColumnId=3,Title="Done"},
-                new Column{ColumnId=4,Title="Postponed"},
+                new Column{Id=1,Title="TODO"},
+                new Column{Id=2,Title="In progress"},
+                new Column{Id=3,Title="Done"},
+                new Column{Id=4,Title="Postponed"},
 
             };
 

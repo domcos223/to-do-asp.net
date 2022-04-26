@@ -24,24 +24,24 @@ namespace TaskManagerApi.Migrations
 
             modelBuilder.Entity("TaskManagerApi.Models.Column", b =>
                 {
-                    b.Property<int>("ColumnId")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ColumnId");
+                    b.HasKey("Id");
 
                     b.ToTable("Column", (string)null);
                 });
 
             modelBuilder.Entity("TaskManagerApi.Models.Todo", b =>
                 {
-                    b.Property<int>("TodoId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TodoId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("ColumnId")
                         .HasColumnType("int");
@@ -58,7 +58,7 @@ namespace TaskManagerApi.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("TodoId");
+                    b.HasKey("Id");
 
                     b.HasIndex("ColumnId");
 

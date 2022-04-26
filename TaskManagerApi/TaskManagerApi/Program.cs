@@ -52,7 +52,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseHttpsRedirection();
 
-app.UseCors();
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 

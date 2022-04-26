@@ -48,7 +48,7 @@ namespace TaskManagerApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTodo(int id, Todo todo)
         {
-            if (id != todo.TodoId)
+            if (id != todo.Id)
             {
                 return BadRequest();
             }
@@ -82,7 +82,7 @@ namespace TaskManagerApi.Controllers
             _context.Todos.Add(todo);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTodo", new { id = todo.TodoId }, todo);
+            return CreatedAtAction(nameof(GetTodo), new { id = todo.Id }, todo);
         }
 
         // DELETE: api/Todos/5
@@ -103,7 +103,7 @@ namespace TaskManagerApi.Controllers
 
         private bool TodoExists(int id)
         {
-            return _context.Todos.Any(e => e.TodoId == id);
+            return _context.Todos.Any(e => e.Id == id);
         }
     }
 }

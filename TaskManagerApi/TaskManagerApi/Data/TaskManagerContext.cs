@@ -14,8 +14,17 @@ namespace TaskManagerApi.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Todo>().ToTable("Todo");
-            modelBuilder.Entity<Column>().ToTable("Column");
+            modelBuilder.Entity<Todo>().HasKey(t => t.Id);
+            modelBuilder.Entity<Todo>().Property(t => t.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Todo>().ToTable(nameof(Todo))
+                                       .HasOne(t => t.Column)
+                                       .WithMany(c => c.Todos)
+                                       .HasForeignKey(t => t.ColumnId);
+
+            modelBuilder.Entity<Column>().HasKey(c => c.Id);
+            modelBuilder.Entity<Column>().ToTable(nameof(Column));
+                                       
+           
         }
     }
 }

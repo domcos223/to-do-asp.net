@@ -26,7 +26,7 @@ namespace TaskManagerApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Column>>> GetColumns()
         {
-            return await _context.Columns.OrderBy(o => o.ColumnId).ToListAsync();
+            return await _context.Columns.OrderBy(o => o.Id).ToListAsync();
         }
 
         // GET: api/Columns/5
@@ -48,7 +48,7 @@ namespace TaskManagerApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutColumn(int id, Column column)
         {
-            if (id != column.ColumnId)
+            if (id != column.Id)
             {
                 return BadRequest();
             }
@@ -76,7 +76,7 @@ namespace TaskManagerApi.Controllers
 
         private bool ColumnExists(int id)
         {
-            return _context.Columns.Any(e => e.ColumnId == id);
+            return _context.Columns.Any(e => e.Id == id);
         }
     }
 }

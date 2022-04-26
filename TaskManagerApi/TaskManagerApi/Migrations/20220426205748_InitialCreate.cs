@@ -13,33 +13,34 @@ namespace TaskManagerApi.Migrations
                 name: "Column",
                 columns: table => new
                 {
-                    ColumnId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Column", x => x.ColumnId);
+                    table.PrimaryKey("PK_Column", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Todo",
                 columns: table => new
                 {
-                    TodoId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ColumnId = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Todo", x => x.TodoId);
+                    table.PrimaryKey("PK_Todo", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Todo_Column_ColumnId",
                         column: x => x.ColumnId,
                         principalTable: "Column",
-                        principalColumn: "ColumnId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
