@@ -26,7 +26,7 @@ namespace TaskManagerApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Column>>> GetColumns()
         {
-            return await _context.Columns.ToListAsync();
+            return await _context.Columns.OrderBy(o => o.ColumnId).ToListAsync();
         }
 
         // GET: api/Columns/5
@@ -70,33 +70,6 @@ namespace TaskManagerApi.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
-        }
-
-        // POST: api/Columns
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Column>> PostColumn(Column column)
-        {
-            _context.Columns.Add(column);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetColumn", new { id = column.ColumnId }, column);
-        }
-
-        // DELETE: api/Columns/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteColumn(int id)
-        {
-            var column = await _context.Columns.FindAsync(id);
-            if (column == null)
-            {
-                return NotFound();
-            }
-
-            _context.Columns.Remove(column);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }

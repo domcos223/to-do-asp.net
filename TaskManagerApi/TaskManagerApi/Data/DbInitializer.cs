@@ -26,10 +26,10 @@ namespace TaskManagerApi.Data
 
             var todos = new Todo[]
             {
-                new Todo{ColumnId=1, Title="Do laundry",Description="add laundry detergent and pod, wash with allergy care",DueDate=DateTime.Parse("2022-04-25")},
-                new Todo{ColumnId=2, Title="Wash dishes",Description="just put them in the washer",DueDate=DateTime.Parse("2022-04-26")},
-                new Todo{ColumnId=3, Title="Walk the dog",Description="leash is at the front door",DueDate=DateTime.Parse("2022-05-10")},
-                new Todo{ColumnId=4, Title="Make dinner",Description="hamburger with fries",DueDate=DateTime.Parse("2022-05-11")},
+                new Todo{ColumnId=1, Title="Do laundry",Description="add laundry detergent and pod, wash with allergy care",DueDate=DateTime.Parse("2022-04-25"),OrderId=1},
+                new Todo{ColumnId=2, Title="Wash dishes",Description="just put them in the washer",DueDate=DateTime.Parse("2022-04-26"),OrderId=1},
+                new Todo{ColumnId=3, Title="Walk the dog",Description="leash is at the front door",DueDate=DateTime.Parse("2022-05-10"),OrderId=1},
+                new Todo{ColumnId=4, Title="Make dinner",Description="hamburger with fries",DueDate=DateTime.Parse("2022-05-11"),OrderId=1},
             };
 
             context.Todos.AddRange(todos);

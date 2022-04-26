@@ -2,8 +2,19 @@ using TaskManagerApi.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var MyAllowSpecificOrigins = "_MyAllowSubdomainPolicy";
 // Add services to the container.
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+       policy =>
+       {
+           policy.WithOrigins("https://localhost:3000")
+               .AllowAnyMethod().AllowAnyHeader();
+       });
+
+});
 
 builder.Services.AddControllers();
 
@@ -40,6 +51,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 
