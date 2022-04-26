@@ -24,14 +24,16 @@ namespace TaskManagerApi.Controllers
 
         // GET: api/Todos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Todo>>> GetTodos()
+        public async Task<ActionResult<IEnumerable<TodoDTO>>> GetTodos()
         {
-            return await _context.Todos.ToListAsync();
+            return await _context.Todos
+                .Select(x => ItemToDTO(x))
+                .ToListAsync();
         }
 
         // GET: api/Todos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Todo>> GetTodo(int id)
+        public async Task<ActionResult<TodoDTO>> GetTodo(int id)
         {
             var todo = await _context.Todos.FindAsync(id);
 
@@ -40,18 +42,30 @@ namespace TaskManagerApi.Controllers
                 return NotFound();
             }
 
-            return todo;
+            return ItemToDTO(todo);
         }
 
         // PUT: api/Todos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodo(int id, Todo todo)
+        public async Task<IActionResult> PutTodo(int id, TodoDTO todoDTO)
         {
-            if (id != todo.Id)
+            if (id != todoDTO.Id)
             {
                 return BadRequest();
             }
+
+            var todo = await _context.Todos.FindAsync(id);
+            if (todo == null)
+            {
+                return NotFound();
+            }
+
+            todo.Title = todoDTO.Title;
+            todo.Description = todoDTO.Description;
+            todo.DueDate = todoDTO.DueDate;
+            todo.OrderId = todoDTO.OrderId;
+            todo.ColumnId = todoDTO.ColumnId;
 
             _context.Entry(todo).State = EntityState.Modified;
 
@@ -77,12 +91,24 @@ namespace TaskManagerApi.Controllers
         // POST: api/Todos
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Todo>> PostTodo(Todo todo)
+        public async Task<ActionResult<TodoDTO>> PostTodo(TodoDTO todoDTO)
         {
+            var todo = new Todo
+            {
+                Title = todoDTO.Title,
+                Description = todoDTO.Description,
+                DueDate = todoDTO.DueDate,
+                OrderId = todoDTO.OrderId,
+                ColumnId = todoDTO.ColumnId
+            };
+
             _context.Todos.Add(todo);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetTodo), new { id = todo.Id }, todo);
+            return CreatedAtAction(nameof(GetTodo), new
+            {
+                id = todo.Id
+            }, ItemToDTO(todo));
         }
 
         // DELETE: api/Todos/5
@@ -105,5 +131,14 @@ namespace TaskManagerApi.Controllers
         {
             return _context.Todos.Any(e => e.Id == id);
         }
+        private static TodoDTO ItemToDTO(Todo todo) =>
+            new TodoDTO
+            {
+                Title = todo.Title,
+                Description = todo.Description,
+                DueDate = todo.DueDate,
+                OrderId = todo.OrderId,
+                ColumnId = todo.ColumnId
+            };
     }
 }
