@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using TaskManagerApi.Data;
 using TaskManagerApi.Models;
 
 namespace TaskManagerApi.Controllers
-{
+{   [EnableCors]
     [Route("api/[controller]")]
     [ApiController]
     public class ColumnsController : ControllerBase
@@ -28,6 +29,7 @@ namespace TaskManagerApi.Controllers
         {
             return await _context.Columns.OrderBy(o => o.Id).ToListAsync();
         }
+
 
         // GET: api/Columns/5
         [HttpGet("{id}")]
