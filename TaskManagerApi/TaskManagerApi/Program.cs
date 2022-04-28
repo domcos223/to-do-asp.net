@@ -2,18 +2,17 @@ using TaskManagerApi.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 // Add services to the container.
+var provider = builder.Services.BuildServiceProvider(); 
+var configuration = provider.GetService<IConfiguration>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: MyAllowSpecificOrigins,
-       policy =>
-       {
-           policy.WithOrigins("https://localhost:3000", "http://localhost:3000","localhost:3000")
-               .AllowAnyMethod().AllowAnyHeader();
-       });
-
+    var frontendURL = configuration.GetValue<string>("frontend_url");
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader();
+    });
 });
 
 builder.Services.AddControllers();
@@ -52,7 +51,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseHttpsRedirection();
 
-app.UseCors(MyAllowSpecificOrigins);
+app.UseCors();
 
 app.UseAuthorization();
 

@@ -22,8 +22,7 @@ namespace TaskManagerApi.Data
                                        .HasForeignKey(t => t.ColumnId);
 
             modelBuilder.Entity<Column>().HasKey(c => c.Id);
-            modelBuilder.Entity<Column>().ToTable(nameof(Column));
-                                       
+            modelBuilder.Entity<Column>().ToTable(nameof(Column));                           
            
         }
     }
