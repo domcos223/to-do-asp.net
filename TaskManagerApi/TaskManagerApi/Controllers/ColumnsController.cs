@@ -1,9 +1,7 @@
-﻿#nullable disable
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +9,7 @@ using TaskManagerApi.Data;
 using TaskManagerApi.Models;
 
 namespace TaskManagerApi.Controllers
-{   [EnableCors]
+{
     [Route("api/[controller]")]
     [ApiController]
     public class ColumnsController : ControllerBase
@@ -25,17 +23,16 @@ namespace TaskManagerApi.Controllers
 
         // GET: api/Columns
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Column>>> GetColumns()
+        public async Task<ActionResult<IEnumerable<Column>>> GetColumn()
         {
-            return await _context.Columns.OrderBy(o => o.Id).ToListAsync();
+            return await _context.Column.ToListAsync();
         }
-
 
         // GET: api/Columns/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Column>> GetColumn(int id)
         {
-            var column = await _context.Columns.FindAsync(id);
+            var column = await _context.Column.FindAsync(id);
 
             if (column == null)
             {
@@ -76,9 +73,36 @@ namespace TaskManagerApi.Controllers
             return NoContent();
         }
 
+        // POST: api/Columns
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Column>> PostColumn(Column column)
+        {
+            _context.Column.Add(column);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetColumn", new { id = column.Id }, column);
+        }
+
+        // DELETE: api/Columns/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteColumn(int id)
+        {
+            var column = await _context.Column.FindAsync(id);
+            if (column == null)
+            {
+                return NotFound();
+            }
+
+            _context.Column.Remove(column);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         private bool ColumnExists(int id)
         {
-            return _context.Columns.Any(e => e.Id == id);
+            return _context.Column.Any(e => e.Id == id);
         }
     }
 }

@@ -12,8 +12,8 @@ using TaskManagerApi.Data;
 namespace TaskManagerApi.Migrations
 {
     [DbContext(typeof(TaskManagerContext))]
-    [Migration("20220426205748_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20220505210044_ChangeDatabaseColumnAdded")]
+    partial class ChangeDatabaseColumnAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,7 +27,10 @@ namespace TaskManagerApi.Migrations
             modelBuilder.Entity("TaskManagerApi.Models.Column", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
@@ -49,6 +52,7 @@ namespace TaskManagerApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DueDate")
@@ -58,6 +62,7 @@ namespace TaskManagerApi.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -69,18 +74,16 @@ namespace TaskManagerApi.Migrations
 
             modelBuilder.Entity("TaskManagerApi.Models.Todo", b =>
                 {
-                    b.HasOne("TaskManagerApi.Models.Column", "Column")
-                        .WithMany("Todos")
+                    b.HasOne("TaskManagerApi.Models.Column", null)
+                        .WithMany("TodoList")
                         .HasForeignKey("ColumnId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Column");
                 });
 
             modelBuilder.Entity("TaskManagerApi.Models.Column", b =>
                 {
-                    b.Navigation("Todos");
+                    b.Navigation("TodoList");
                 });
 #pragma warning restore 612, 618
         }
