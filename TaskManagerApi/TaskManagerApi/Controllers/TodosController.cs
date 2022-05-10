@@ -42,35 +42,31 @@ namespace TaskManagerApi.Controllers
             return todo;
         }
 
+        [HttpGet("ReqList/columnid={id}")]
+        public async Task<IEnumerable<Todo>> GetColumnTodos(int id)
+        {
+            var todo = await _context.Todos.Where(w => w.ColumnId == id).ToListAsync();
+
+            if (todo == null)
+            {
+                return new List<Todo>();
+            }
+
+            return todo;
+        }
+
         // PUT: api/Todos/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodo(int id, [FromForm] Todo todo)
+        [HttpPut("UpdateList")]
+        public async Task<IActionResult> PutTodo(int id, int draggedtaskid)
         {
-            if (id != todo.Id)
-            {
-                return BadRequest();
-            }
+        
+            var updateColumnId =  await _context.Todos.Where(w => w.Id == draggedtaskid).FirstOrDefaultAsync();
+            updateColumnId.ColumnId = id;
 
-            _context.Entry(todo).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TodoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+           _context.SaveChanges();
             return NoContent();
+
         }
 
         // POST: api/Todos

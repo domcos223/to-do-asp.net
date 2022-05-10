@@ -19,11 +19,11 @@ namespace TaskManagerApi.Data
             modelBuilder.Entity<Todo>().Property(t => t.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<Todo>().ToTable(nameof(Todo));
             modelBuilder.Entity<Column>().HasKey(c => c.Id);
+            modelBuilder.Entity<Todo>().Property(t => t.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<Column>().ToTable(nameof(Column));
             
            
         }
 
-        public DbSet<TaskManagerApi.Models.Column> Column { get; set; }
     }
 }

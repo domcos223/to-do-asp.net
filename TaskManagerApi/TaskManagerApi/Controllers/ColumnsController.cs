@@ -25,14 +25,14 @@ namespace TaskManagerApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Column>>> GetColumn()
         {
-            return await _context.Column.ToListAsync();
+            return await _context.Columns.OrderBy(o => o.Id).ToListAsync();
         }
 
         // GET: api/Columns/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Column>> GetColumn(int id)
         {
-            var column = await _context.Column.FindAsync(id);
+            var column = await _context.Columns.FindAsync(id);
 
             if (column == null)
             {
@@ -78,7 +78,7 @@ namespace TaskManagerApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Column>> PostColumn(Column column)
         {
-            _context.Column.Add(column);
+            _context.Columns.Add(column);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetColumn", new { id = column.Id }, column);
@@ -88,13 +88,13 @@ namespace TaskManagerApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteColumn(int id)
         {
-            var column = await _context.Column.FindAsync(id);
+            var column = await _context.Columns.FindAsync(id);
             if (column == null)
             {
                 return NotFound();
             }
 
-            _context.Column.Remove(column);
+            _context.Columns.Remove(column);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -102,7 +102,7 @@ namespace TaskManagerApi.Controllers
 
         private bool ColumnExists(int id)
         {
-            return _context.Column.Any(e => e.Id == id);
+            return _context.Columns.Any(e => e.Id == id);
         }
     }
 }

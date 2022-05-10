@@ -6,6 +6,22 @@ namespace TaskManagerApi.Data
     {
         public static void Initialize(TaskManagerContext context)
         {
+            if (context.Columns.Any())
+            {
+                return;
+            }
+
+            var columns = new List<Column>();
+
+            columns.Add(new Column { Title = "Todo" });
+            columns.Add(new Column { Title = "In progress" });
+            columns.Add(new Column { Title = "Done" });
+            columns.Add(new Column { Title = "Postponed" });
+
+            context.Columns.AddRange(columns);
+            context.SaveChanges();
+
+
             if (context.Todos.Any())
             {
                 return;   // DB has been seeded
@@ -21,20 +37,6 @@ namespace TaskManagerApi.Data
             context.Todos.AddRange(todos);
             context.SaveChanges();
 
-            if (context.Columns.Any())
-            {
-                return;
-            }
-
-            var columns = new List<Column>();
-
-            columns.Add(new Column { Id = 1, Title = "Todo" });
-            columns.Add(new Column { Id = 2, Title = "In progress" });
-            columns.Add(new Column { Id = 3, Title = "Done" });
-            columns.Add(new Column { Id = 4, Title = "Postponed" });
-
-            context.Columns.AddRange(columns);
-            context.SaveChanges();
 
 
 
