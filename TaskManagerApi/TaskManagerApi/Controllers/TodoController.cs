@@ -12,23 +12,23 @@ namespace TaskManagerApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TodosController : ControllerBase
+    public class TodoController : ControllerBase
     {
         private readonly TaskManagerContext _context;
 
-        public TodosController(TaskManagerContext context)
+        public TodoController(TaskManagerContext context)
         {
             _context = context;
         }
 
-        // GET: api/Todos
+        // GET: api/Todo
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Todo>>> GetTodos()
         {
-            return await _context.Todos.OrderBy(o => o.OrderId).ToListAsync();
+            return await _context.Todos.ToListAsync();
         }
 
-        // GET: api/Todos/5
+        // GET: api/Todo/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Todo>> GetTodo(int id)
         {
@@ -36,56 +36,55 @@ namespace TaskManagerApi.Controllers
 
             if (todo == null)
             {
-                return BadRequest("Todo with the given id doesn't exist");
+                return NotFound();
             }
 
             return todo;
         }
 
-        [HttpGet("ReqList/columnid={id}")]
-        public async Task<IEnumerable<Todo>> GetColumnTodos(int id)
-        {
-            var todo = await _context.Todos.Where(w => w.ColumnId == id).ToListAsync();
-
-            if (todo == null)
-            {
-                return new List<Todo>();
-            }
-
-            return todo;
-        }
-
-        // PUT: api/Todos/5
+        // PUT: api/Todo/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("UpdateList")]
-        public async Task<IActionResult> PutTodo(int id, int draggedtaskid)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutTodo(int id, Todo todo)
         {
-        
-            var updateColumnId =  await _context.Todos.Where(w => w.Id == draggedtaskid).FirstOrDefaultAsync();
-            updateColumnId.ColumnId = id;
+            if (id != todo.TodoId)
+            {
+                return BadRequest();
+            }
 
-           _context.SaveChanges();
+            _context.Entry(todo).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TodoExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
             return NoContent();
-
         }
 
-        // POST: api/Todos
+        // POST: api/Todo
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Todo>> PostTodo(Todo todo)
         {
-            if (todo == null)
-            {
-                return BadRequest("Sending data to server failed.");
-            }
-
             _context.Todos.Add(todo);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTodo", new { id = todo.Id }, todo);
+            return CreatedAtAction("GetTodo", new { id = todo.TodoId }, todo);
         }
 
-        // DELETE: api/Todos/5
+        // DELETE: api/Todo/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTodo(int id)
         {
@@ -103,7 +102,7 @@ namespace TaskManagerApi.Controllers
 
         private bool TodoExists(int id)
         {
-            return _context.Todos.Any(e => e.Id == id);
+            return _context.Todos.Any(e => e.TodoId == id);
         }
     }
 }

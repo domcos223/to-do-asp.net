@@ -24,48 +24,67 @@ namespace TaskManagerApi.Migrations
 
             modelBuilder.Entity("TaskManagerApi.Models.Column", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ColumnId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ColumnId"), 1L, 1);
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ColumnId");
 
-                    b.ToTable("Column", (string)null);
+                    b.ToTable("Columns");
                 });
 
             modelBuilder.Entity("TaskManagerApi.Models.Todo", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("TodoId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TodoId"), 1L, 1);
 
                     b.Property<int>("ColumnId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
 
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("DueDate")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("Id");
+                    b.HasKey("TodoId");
 
-                    b.ToTable("Todo", (string)null);
+                    b.HasIndex("ColumnId");
+
+                    b.ToTable("Todos");
+                });
+
+            modelBuilder.Entity("TaskManagerApi.Models.Todo", b =>
+                {
+                    b.HasOne("TaskManagerApi.Models.Column", "Column")
+                        .WithMany("Todos")
+                        .HasForeignKey("ColumnId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Column");
+                });
+
+            modelBuilder.Entity("TaskManagerApi.Models.Column", b =>
+                {
+                    b.Navigation("Todos");
                 });
 #pragma warning restore 612, 618
         }

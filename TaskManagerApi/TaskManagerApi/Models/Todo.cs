@@ -5,20 +5,23 @@ using System.Text.Json.Serialization;
 namespace TaskManagerApi.Models
 {
     public class Todo
-    {   
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int TodoId { get; set; }
+        public int ColumnId { get; set; }
 
-        public int Id { get; set; }
-        [Required(ErrorMessage = "You didn't provide enough data")]
+        [StringLength(20)]
         public string Title { get; set; }
-        [Required(ErrorMessage = "You didn't provide enough data")]
+
+        [StringLength(80)]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "You didn't provide enough data")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime DueDate { get; set; }
+        public DateTimeOffset DueDate { get; set; }
         public int OrderId { get; set; }
-        public int ColumnId { get; set; }
+
+        [JsonIgnore]
+        public Column Column { get; set; }
 
     }
 }
