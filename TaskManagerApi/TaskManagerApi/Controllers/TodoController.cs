@@ -73,9 +73,20 @@ namespace TaskManagerApi.Controllers
             return NoContent();
         }
 
-        // POST: api/Todo
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPut("MoveTodo")]
+        public void MoveTodo(int destinationId, int draggableId)
+        {
+            var draggedTodo = _context.Todos.Where(w => w.TodoId == draggableId).First();
+            draggedTodo.ColumnId = destinationId;
+            _context.Entry(draggedTodo).State = EntityState.Modified;
+            _context.SaveChanges();
+
+        }
+
+
+            // POST: api/Todo
+            // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+            [HttpPost]
         public async Task<ActionResult<Todo>> PostTodo(Todo todo)
         {
             _context.Todos.Add(todo);

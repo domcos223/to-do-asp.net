@@ -25,7 +25,7 @@ namespace TaskManagerApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Column>>> GetColumns()
         {
-            var columns = await _context.Columns.Include(c => c.Todos).ToListAsync();
+            var columns = await _context.Columns.Include(c => c.Todos).OrderBy(o=> o.ColumnId).ToListAsync();
             return columns;
         }
 
