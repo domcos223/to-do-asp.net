@@ -46,7 +46,7 @@ namespace TaskManagerApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTodo(int id, Todo todo)
-        { 
+        {
             if (id != todo.TodoId)
             {
                 return BadRequest();
@@ -98,8 +98,8 @@ namespace TaskManagerApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Todo>> PostTodo(Todo todo)
-        {   
-            var lastOrderId = _context.Todos.Where(t => t.ColumnId == todo.ColumnId).Max(t => (int?)t.OrderId) ??0 ;
+        {
+            var lastOrderId = _context.Todos.Where(t => t.ColumnId == todo.ColumnId).Max(t => (int?)t.OrderId) ?? 0;
             if (lastOrderId == 0)
             {
                 todo.OrderId = 1;
@@ -123,9 +123,20 @@ namespace TaskManagerApi.Controllers
             {
                 return NotFound();
             }
-
+            var removedOrderId = todo.OrderId;
             _context.Todos.Remove(todo);
             await _context.SaveChangesAsync();
+            var todosAfter = _context.Todos.Where(t => t.ColumnId == todo.ColumnId)
+                .Where(t => t.OrderId > removedOrderId)
+              .OrderBy(o => o.OrderId).ToList();
+           
+                foreach (var item  in todosAfter)
+                {
+                item.OrderId -= 1;
+
+                }
+            await _context.SaveChangesAsync();
+
 
             return NoContent();
         }
