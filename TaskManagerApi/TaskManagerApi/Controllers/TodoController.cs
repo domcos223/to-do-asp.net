@@ -46,7 +46,7 @@ namespace TaskManagerApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTodo(int id, Todo todo)
-        {
+        { 
             if (id != todo.TodoId)
             {
                 return BadRequest();
@@ -83,12 +83,31 @@ namespace TaskManagerApi.Controllers
 
         }
 
-
-            // POST: api/Todo
-            // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-            [HttpPost]
-        public async Task<ActionResult<Todo>> PostTodo(Todo todo)
+        [HttpPut("EditTodo")]
+        public void EditTodo(int id, string title, string description, string dueDate)
         {
+            var editedTodo = _context.Todos.Where(w => w.TodoId == id).First();
+            editedTodo.Title = title;
+            editedTodo.Description = description;
+            editedTodo.DueDate = DateTime.Parse(dueDate);
+            _context.Entry(editedTodo).State = EntityState.Modified;
+            _context.SaveChanges();
+
+        }
+        // POST: api/Todo
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Todo>> PostTodo(Todo todo)
+        {   
+            var lastOrderId = _context.Todos.Where(t => t.ColumnId == todo.ColumnId).Max(t => (int?)t.OrderId) ??0 ;
+            if (lastOrderId == 0)
+            {
+                todo.OrderId = 1;
+            }
+            else
+            {
+                todo.OrderId = lastOrderId + 1;
+            }
             _context.Todos.Add(todo);
             await _context.SaveChangesAsync();
 
