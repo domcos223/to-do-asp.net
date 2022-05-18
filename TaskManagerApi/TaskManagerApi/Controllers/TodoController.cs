@@ -42,74 +42,55 @@ namespace TaskManagerApi.Controllers
             return todo;
         }
 
-        // PUT: api/Todo/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodo(int id, Todo todo)
-        {
-            if (id != todo.TodoId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(todo).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TodoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
 
         [HttpPut("MoveTodo")]
         public void MoveTodo(int? sourceId, int destinationId, int draggableId, int orderId)
-        {   
+        {
+            var draggedTodo = _context.Todos.Where(w => w.TodoId == draggableId).First();
             if (sourceId == null) //moving inside one column
             {
-
-            }
-            var draggedTodo = _context.Todos.Where(w => w.TodoId == draggableId).First();
-            var todosFinish = _context.Todos.Where(t => t.ColumnId == destinationId)
-              .OrderBy(o => o.OrderId).ToList();
-
-            var todosStart = _context.Todos.Where(t => t.ColumnId == sourceId)
-              .OrderBy(o => o.OrderId).ToList();
-            todosStart.Remove(draggedTodo);
-            _context.SaveChanges();
-            foreach (var item in todosStart)
-            {
-
-                if (item.OrderId >= draggedTodo.OrderId)
+                var columnTodosBefore = _context.Todos.Where(t => t.ColumnId == destinationId).OrderBy(o => o.OrderId).ToList();
+                columnTodosBefore.Remove(draggedTodo);
+                columnTodosBefore.Insert(orderId - 1, draggedTodo);
+                draggedTodo.OrderId = orderId;
+                int id = 1;
+                foreach (var todo in columnTodosBefore)
                 {
-                    item.OrderId -= 1;
+                    todo.OrderId = id;
+                    id++;
                 }
 
-            }
-            foreach (var item in todosFinish)
-            {
-                if (item.OrderId >= orderId)
-                {
-                    item.OrderId += 1;
-                }
-                
-            }
-            draggedTodo.ColumnId = destinationId;
-            draggedTodo.OrderId = orderId;
-            _context.Entry(draggedTodo).State = EntityState.Modified;
-            _context.SaveChanges();
+                _context.Entry(draggedTodo).State = EntityState.Modified;
+                _context.SaveChanges();
 
+            }
+            else
+            {
+                var todosFinish = _context.Todos.Where(t => t.ColumnId == destinationId)
+                  .OrderBy(o => o.OrderId).ToList();
+
+                var todosStart = _context.Todos.Where(t => t.ColumnId == sourceId)
+                  .OrderBy(o => o.OrderId).ToList();
+                todosStart.Remove(draggedTodo);
+                _context.SaveChanges();
+                int id = 1;
+                foreach (var todo in todosStart)
+                {
+                    todo.OrderId = id;
+                    id++;
+                }
+                todosFinish.Insert(orderId - 1, draggedTodo);
+                draggedTodo.ColumnId = destinationId;
+                draggedTodo.OrderId = orderId;
+                int id2 = 1;
+                foreach (var todo in todosFinish)
+                {
+                    todo.OrderId = id2;
+                    id2++;
+                }
+                _context.Entry(draggedTodo).State = EntityState.Modified;
+                _context.SaveChanges();
+            }
         }
 
         [HttpPut("EditTodo")]
