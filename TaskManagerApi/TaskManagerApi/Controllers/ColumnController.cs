@@ -21,16 +21,16 @@ namespace TaskManagerApi.Controllers
             _context = context;
         }
 
-        // GET: api/Action
+        // GET: api/Column
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Column>>> GetColumns()
-        {
-            var columns = await _context.Columns.Include(c => c.Todos).OrderBy(o=> o.ColumnId).ToListAsync();
+        {   
+            var columns = await _context.Columns.OrderBy(o => o.ColumnId).Include(c => c.Todos.OrderBy(o=> o.OrderId)).ToListAsync();
             return columns;
         }
 
 
-        // GET: api/Action/5
+        // GET: api/Column/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Column>> GetColumn(int id)
         {
@@ -44,40 +44,40 @@ namespace TaskManagerApi.Controllers
             return column;
         }
 
-        // PUT: api/Action/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutColumn(int id, Column column)
-        {
-            if (id != column.ColumnId)
-            {
-                return BadRequest();
-            }
+        //// PUT: api/Column/5
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutColumn(int id, Column column)
+        //{
+        //    if (id != column.ColumnId)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Entry(column).State = EntityState.Modified;
+        //    _context.Entry(column).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ColumnExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!ColumnExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
-        private bool ColumnExists(int id)
-        {
-            return _context.Columns.Any(e => e.ColumnId == id);
-        }
+        //private bool ColumnExists(int id)
+        //{
+        //    return _context.Columns.Any(e => e.ColumnId == id);
+        //}
     }
 }

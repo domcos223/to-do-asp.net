@@ -74,10 +74,39 @@ namespace TaskManagerApi.Controllers
         }
 
         [HttpPut("MoveTodo")]
-        public void MoveTodo(int destinationId, int draggableId)
-        {
+        public void MoveTodo(int? sourceId, int destinationId, int draggableId, int orderId)
+        {   
+            if (sourceId == null) //moving inside one column
+            {
+
+            }
             var draggedTodo = _context.Todos.Where(w => w.TodoId == draggableId).First();
+            var todosFinish = _context.Todos.Where(t => t.ColumnId == destinationId)
+              .OrderBy(o => o.OrderId).ToList();
+
+            var todosStart = _context.Todos.Where(t => t.ColumnId == sourceId)
+              .OrderBy(o => o.OrderId).ToList();
+            todosStart.Remove(draggedTodo);
+            _context.SaveChanges();
+            foreach (var item in todosStart)
+            {
+
+                if (item.OrderId >= draggedTodo.OrderId)
+                {
+                    item.OrderId -= 1;
+                }
+
+            }
+            foreach (var item in todosFinish)
+            {
+                if (item.OrderId >= orderId)
+                {
+                    item.OrderId += 1;
+                }
+                
+            }
             draggedTodo.ColumnId = destinationId;
+            draggedTodo.OrderId = orderId;
             _context.Entry(draggedTodo).State = EntityState.Modified;
             _context.SaveChanges();
 
