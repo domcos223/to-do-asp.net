@@ -7,5 +7,6 @@ namespace TaskManagerApi.Data
     {
         public abstract DbSet<Todo> Todos { get; set; }
         public abstract DbSet<Column> Columns { get; set; }
+     
     }
 }
