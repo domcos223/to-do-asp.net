@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace TaskManagerApi.Data
 {
 
-    public class TaskManagerContext : DbContext
+    public class TaskManagerContext : DbContext , ITaskManagerContext
     {
         public TaskManagerContext(DbContextOptions<TaskManagerContext> options) : base(options)
         {

@@ -139,12 +139,12 @@ namespace TaskManagerApi.Controllers
             var todosAfter = _context.Todos.Where(t => t.ColumnId == todo.ColumnId)
                 .Where(t => t.OrderId > removedOrderId)
               .OrderBy(o => o.OrderId).ToList();
-           
-                foreach (var item  in todosAfter)
-                {
+
+            foreach (var item in todosAfter)
+            {
                 item.OrderId -= 1;
 
-                }
+            }
             await _context.SaveChangesAsync();
 
 
