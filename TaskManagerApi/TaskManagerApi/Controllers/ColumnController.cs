@@ -29,55 +29,5 @@ namespace TaskManagerApi.Controllers
             return columns;
         }
 
-
-        // GET: api/Column/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Column>> GetColumn(int id)
-        {
-            var column = await _context.Columns.FindAsync(id);
-
-            if (column == null)
-            {
-                return NotFound();
-            }
-
-            return column;
-        }
-
-        //// PUT: api/Column/5
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutColumn(int id, Column column)
-        //{
-        //    if (id != column.ColumnId)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    _context.Entry(column).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!ColumnExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
-        //private bool ColumnExists(int id)
-        //{
-        //    return _context.Columns.Any(e => e.ColumnId == id);
-        //}
     }
 }
